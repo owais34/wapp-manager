@@ -1,14 +1,13 @@
 import sys
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI
 from pymongo.errors import PyMongoError
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.router import api_router
 from app.core.logging_config import logger
 from app.db.session import get_database
-from app.utils.crud_user import create_user
 from app.ws.router import websocket_router
 
 
