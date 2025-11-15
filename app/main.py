@@ -46,8 +46,4 @@ app.add_middleware(
 
 @app.get("/")
 def read_root():
-    try:
-        create_user("admin", "password", True)
-    except Exception as e:
-        logger.exception("User already present")
     return {"status": "ok", "message": "FastAPI Auth API running!"}

@@ -1,0 +1,24 @@
+fastapi:
+  image: your-docker-user/fastapi-app:latest
+  imagePullPolicy: IfNotPresent
+  replicaCount: 1
+  port: 8000
+  env:
+    MONGO_URI: "mongodb://mongo:27017/appdb"
+
+mongodb:
+  enabled: true
+  image: mongo:7
+  username: root
+  password: rootpassword
+  dbName: appdb
+  port: 27017
+
+jobs:
+  preInstall:
+    image: your-registry/pre-install:latest
+    command: ["python", "pre_install.py"]
+
+  postInstall:
+    image: your-registry/post-install:latest
+    command: ["python", "post_install.py"]
