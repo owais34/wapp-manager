@@ -1,4 +1,4 @@
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union
 
 from bson import ObjectId
 
@@ -12,8 +12,10 @@ db = get_database()
 def get_user_by_username(username: str) -> Optional[Dict[str, Any]]:
     return db[USERS].find_one({"username": username})
 
-def get_user_by_id(user_id: str) -> Optional[Dict[str, Any]]:
-    return db[USERS].find_one({"_id": ObjectId(user_id)})
+def get_user_by_id(user_id: Union[str, ObjectId]) -> Optional[Dict[str, Any]]:
+    if isinstance(user_id, str):
+        user_id = ObjectId(user_id)
+    return db[USERS].find_one({"_id": user_id})
 
 
 def create_user(username: str, password: str, is_admin: bool = False):

@@ -39,7 +39,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return jwt.encode(payload, SETTINGS.SECRET_KEY, algorithm=SETTINGS.ALGORITHM)
 
 
-def decode_access_token(token: str) -> dict:
+def decode_access_token(token: str) -> TokenPayload:
     """
     Decode a JWT access token and return its payload.
     Raises an HTTPException if token is invalid or expired.
@@ -52,7 +52,7 @@ def decode_access_token(token: str) -> dict:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token: subject missing",
             )
-        return payload
+        return TokenPayload(**payload)
 
     except ExpiredSignatureError:
         raise HTTPException(
@@ -60,6 +60,12 @@ def decode_access_token(token: str) -> dict:
             detail="Token has expired",
         )
     except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+        )
+    except Exception as e:
+        logger.exception("Failed to decode access token")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",
