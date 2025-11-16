@@ -30,8 +30,11 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
+def create_access_token(user: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = {
+        "user_id": str(user["_id"]),
+        "auth_level": user["role"],
+    }
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=SETTINGS.ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"expiry": expire})
     payload = TokenPayload.model_validate(to_encode).model_dump(mode="json")
@@ -46,14 +49,13 @@ def decode_access_token(token: str) -> TokenPayload:
     """
     try:
         payload = jwt.decode(token, SETTINGS.SECRET_KEY, algorithms=[SETTINGS.ALGORITHM])
-        username = payload.get("username")
-        if username is None:
+        user_id = payload.get("user_id")
+        if user_id is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid token: subject missing",
             )
         return TokenPayload(**payload)
-
     except ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

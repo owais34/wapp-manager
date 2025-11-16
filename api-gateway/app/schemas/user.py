@@ -27,4 +27,3 @@ class UserOut(UserBase):
     class Config:
         from_attributes = True
         validate_by_name = True
-
