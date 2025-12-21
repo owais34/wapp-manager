@@ -3,8 +3,9 @@ from typing import Optional, Dict, Any, Union
 from bson import ObjectId
 
 from app.db.constants import USERS
+from app.db.models import UserModel
 from app.db.session import get_database
-from app.models.user import UserModel
+
 from app.core.security import hash_password
 
 db = get_database()

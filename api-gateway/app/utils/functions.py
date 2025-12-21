@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status, Request
 
 from app.core.security import decode_access_token
-from app.utils import crud_user
+from app.utils import user
 
 
 async def get_current_user(request: Request):

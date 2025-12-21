@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from bson import ObjectId
-from pydantic import BaseModel, ConfigDict, field_validator, Field
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class TokenPayload(BaseModel):
@@ -26,3 +25,8 @@ class TokenPayload(BaseModel):
             except:
                 raise ValueError("Invalid Date string")
         return value
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
